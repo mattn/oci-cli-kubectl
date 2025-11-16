@@ -1,7 +1,6 @@
 FROM ghcr.io/oracle/oci-cli:latest
 
-RUN dnf install -y curl && \
-    curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
-    rm -rf kubectl && \
-    dnf remove -y curl && dnf clean all
+RUN VERSION=$(wget -qO - https://dl.k8s.io/release/stable.txt) && \
+    wget -O /tmp/kubectl "https://dl.k8s.io/release/${VERSION}/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 /tmp/kubectl /usr/local/bin/kubectl && \
+    rm -f /tmp/kubectl
